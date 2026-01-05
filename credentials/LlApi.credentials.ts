@@ -7,24 +7,31 @@ import type {
 
 export class LlApi implements ICredentialType {
   name = 'llApi';
-  displayName = 'LL API (Bearer)';
-  documentationUrl = 'https://seu-docs-ou-repo';
+  displayName = 'LL API';
+  documentationUrl = 'https://seus-docs-ou-repo';
 
-  properties: INodeProperties[] = [
+   properties: INodeProperties[] = [
     {
       displayName: 'Base URL',
       name: 'baseUrl',
       type: 'string',
-      default: 'http://localhost:3001',
+      default: 'https://api.liguelead.com.br',
       required: true,
     },
     {
-      displayName: 'Token',
-      name: 'token',
+      displayName: 'API Token',
+      name: 'apiToken',
       type: 'string',
       typeOptions: { password: true },
-      default: '',
       required: true,
+      default: '',
+    },
+    {
+      displayName: 'App ID',
+      name: 'appId',
+      type: 'string',
+      required: true,
+      default: '',
     },
   ];
 
@@ -32,7 +39,8 @@ export class LlApi implements ICredentialType {
     type: 'generic',
     properties: {
       headers: {
-        Authorization: '=Bearer {{$credentials.token}}',
+        'api-token': '={{$credentials.apiToken}}',
+        'app-id': '={{$credentials.appId}}',
       },
     },
   };

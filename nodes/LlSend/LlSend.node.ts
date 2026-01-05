@@ -1,6 +1,5 @@
 import type {
   IExecuteFunctions,
-  IHttpRequestMethods,
   INodeExecutionData,
   INodeType,
   INodeTypeDescription,
@@ -12,11 +11,11 @@ export class LlSend implements INodeType {
     name: 'llSend',
     group: ['output'],
     version: 1,
-    description: 'Send a request to LL API',
+    description: 'Send requests to LL API (SMS)',
     defaults: {
       name: 'LL Integrations',
     },
-     icon: 'file:logo.svg',
+    icon: 'file:logo.svg',
     inputs: ['main'],
     outputs: ['main'],
     credentials: [{ name: 'llApi', required: true }],
@@ -25,33 +24,30 @@ export class LlSend implements INodeType {
         displayName: 'Endpoint',
         name: 'endpoint',
         type: 'string',
-        default: '/webhooks/receive',
+        default: '/v1/sms',
         required: true,
-        description: 'Path appended to Base URL',
       },
       {
-        displayName: 'Method',
-        name: 'method',
-        type: 'options',
-        default: 'POST',
-        options: [
-          { name: 'POST', value: 'POST' },
-          { name: 'PUT', value: 'PUT' },
-          { name: 'PATCH', value: 'PATCH' },
-        ],
-      },
-      {
-        displayName: 'Send Item JSON as Body',
-        name: 'sendItemJson',
+        displayName: 'Send Input JSON as Body',
+        name: 'sendInputJson',
         type: 'boolean',
         default: true,
+        description: 'If enabled, sends the incoming item JSON as the request body.',
       },
+
+      // (opcional) override manual caso queira
       {
-        displayName: 'Body (JSON)',
-        name: 'body',
+        displayName: 'Body (Override)',
+        name: 'bodyOverride',
         type: 'json',
-        default: '{}',
-        displayOptions: { show: { sendItemJson: [false] } },
+        default: '',
+        displayOptions: {
+          show: {
+            sendInputJson: [false],
+          },
+        },
+        description:
+          'If "Send Input JSON as Body" is disabled, this JSON will be used as request body.',
       },
     ],
   };
@@ -65,21 +61,35 @@ export class LlSend implements INodeType {
 
     for (let i = 0; i < items.length; i++) {
       const endpoint = this.getNodeParameter('endpoint', i) as string;
-      const method = this.getNodeParameter('method', i) as IHttpRequestMethods;
-      const sendItemJson = this.getNodeParameter('sendItemJson', i) as boolean;
-
-      const body = sendItemJson ? items[i].json : (this.getNodeParameter('body', i) as object);
+      const sendInputJson = this.getNodeParameter('sendInputJson', i) as boolean;
 
       const url = `${baseUrl}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 
+      const body = sendInputJson
+        ? items[i].json // ✅ pega o JSON do Edit Fields
+        : (this.getNodeParameter('bodyOverride', i) as object);
+
+      // validação mínima pra evitar request vazio
+      if (!body || (typeof body === 'object' && Object.keys(body as any).length === 0)) {
+        throw new Error(
+          'Request body is empty. Use "Edit Fields" to create the payload or provide a Body Override.'
+        );
+      }
+
       const response = await this.helpers.requestWithAuthentication.call(this, 'llApi', {
-        method,
+        method: 'POST',
         url,
         json: true,
         body,
       });
 
-      returnData.push({ json: response });
+      returnData.push({
+        json: {
+          ok: true,
+          request: { url, body },
+          response,
+        },
+      });
     }
 
     return [returnData];
