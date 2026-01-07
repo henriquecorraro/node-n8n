@@ -15,7 +15,7 @@ export class LlApi implements ICredentialType {
       displayName: 'Base URL',
       name: 'baseUrl',
       type: 'string',
-      default: 'https://api.liguelead.com.br',
+      default: 'https://api.liguelead.com.br/v1',
       required: true,
     },
     {
