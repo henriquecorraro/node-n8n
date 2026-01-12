@@ -1,18 +1,23 @@
 {
-	"name": "n8n-nodes-ll-ingrategrations",
+	"name": "n8n-nodes-liguelead",
 	"version": "0.1.0",
-	"description": "",
+	"description": "Community node for n8n to send SMS and voice calls using the LigueLead API",
 	"license": "MIT",
 	"homepage": "",
 	"keywords": [
-		"n8n-nodes-ll-ingrategrations"
+		"n8n-community-node-package",
+		"n8n-nodes",
+		"liguelead",
+		"sms",
+		"voice",
+		"telephony"
 	],
 	"author": {
 		"name": "Henrique Corraro",
 		"email": "henriquecorraro@liguelead.com.br"
 	},
 	"scripts": {
-		"build": "n8n-node build",
+		"build": "n8n-node build && mkdir -p dist/nodes/LigueLead dist/credentials && cp nodes/LigueLead/logo.svg dist/nodes/LigueLead/logo.svg && cp credentials/logo.svg dist/credentials/logo.svg",
 		"build:watch": "tsc --watch",
 		"dev": "n8n-node dev",
 		"lint": "n8n-node lint",
@@ -21,22 +26,22 @@
 		"prepublishOnly": "n8n-node prerelease"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"src/nodes/**/logo.svg"
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"strict": true,
 		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
+			"dist/credentials/LlApi.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/LigueLead/LigueLead.node.js"
 		]
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "*",
+		"cpx": "^1.2.1",
 		"eslint": "9.32.0",
 		"prettier": "3.6.2",
 		"release-it": "^19.0.4",
@@ -45,7 +50,7 @@
 	"peerDependencies": {
 		"n8n-workflow": "*"
 	},
-  "overrides": {
-    "change-case": "4.1.2"
-  }
+	"overrides": {
+		"change-case": "4.1.2"
+	}
 }

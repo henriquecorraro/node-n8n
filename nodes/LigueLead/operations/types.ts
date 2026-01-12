@@ -7,5 +7,5 @@ export type OperationDef = {
 	name: string;
 	description?: string;
 	properties: INodeProperties[];
-	execute: (ctx: OperationContext, itemIndex: number) => Promise<any>;
+	execute: (ctx: OperationContext, itemIndex: number) => Promise<unknown>;
 };

@@ -3,13 +3,14 @@ import type {
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
+	Icon
 } from 'n8n-workflow';
 
 export class LlApi implements ICredentialType {
 	name = 'llApi';
 	displayName = 'LigueLead API';
 	documentationUrl = 'https://seus-docs-ou-repo';
-
+	icon: Icon = 'file:logo.svg'; 
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Base URL',

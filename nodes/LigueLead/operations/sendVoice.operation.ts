@@ -13,7 +13,7 @@ export const sendVoiceOperation: OperationDef = {
 			default: 0,
 			required: true,
 			displayOptions: { show: { operation: ['sendVoice'] } },
-			description: 'ID do áudio previamente enviado (voice_upload_id).',
+			description: 'ID do áudio previamente enviado (voice_upload_id)',
 		},
 		{
 			displayName: 'Phones Field',
@@ -22,7 +22,7 @@ export const sendVoiceOperation: OperationDef = {
 			default: 'phones',
 			required: true,
 			displayOptions: { show: { operation: ['sendVoice', 'sendVoiceWithUpload'] } },
-			description: 'Nome do campo no input JSON com array de telefones.',
+			description: 'Nome do campo no input JSON com array de telefones',
 		},
 		{
 			displayName: 'Title Field',
@@ -31,12 +31,12 @@ export const sendVoiceOperation: OperationDef = {
 			default: 'title',
 			required: true,
 			displayOptions: { show: { operation: ['sendVoice', 'sendVoiceWithUpload'] } },
-			description: 'Nome do campo no input JSON com o title.',
+			description: 'Nome do campo no input JSON com o title',
 		},
 	],
 
 	async execute(ctx, itemIndex) {
-		const baseUrl = await getBaseUrl(ctx);
+		const baseUrl = await getBaseUrl();
 		const url = `${baseUrl}/voice`;
 
 		const { phones, title } = getVoiceCommon(ctx, itemIndex);

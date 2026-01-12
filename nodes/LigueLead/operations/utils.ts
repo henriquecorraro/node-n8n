@@ -1,8 +1,7 @@
 import type { IExecuteFunctions } from 'n8n-workflow';
 
-export async function getBaseUrl(ctx: IExecuteFunctions) {
-	const creds = await ctx.getCredentials('llApi');
-	return String((creds as any).baseUrl ?? 'https://api.liguelead.com.br/v1').replace(/\/$/, '');
+export async function getBaseUrl() {
+	return 'https://api.liguelead.com.br/v1'
 }
 
 export function getVoiceCommon(ctx: IExecuteFunctions, itemIndex: number) {
@@ -11,8 +10,8 @@ export function getVoiceCommon(ctx: IExecuteFunctions, itemIndex: number) {
 	const phonesField = ctx.getNodeParameter('phonesField', itemIndex) as string;
 	const titleField = ctx.getNodeParameter('titleField', itemIndex) as string;
 
-	const phones = (items[itemIndex].json as any)?.[phonesField];
-	const title = (items[itemIndex].json as any)?.[titleField];
+	const phones = (items[itemIndex].json)?.[phonesField];
+	const title = (items[itemIndex].json)?.[titleField];
 
 	if (!Array.isArray(phones) || phones.length === 0) {
 		throw new Error(`Campo "${phonesField}" precisa ser um array de telefones (phones: string[]).`);
